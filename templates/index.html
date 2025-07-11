@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangla Plagiarism Checker | প্রফেশনাল বাংলা সাদৃশ্য পরীক্ষক</title>
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2b7df7;
+            --primary-dark: #1a5fc5;
+            --danger: #ff4d4f;
+            --success: #52c41a;
+            --warning: #faad14;
+            --text: #333;
+            --text-light: #666;
+            --light-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.1);
+            
+            /* Dark mode variables */
+            --dark-bg: #1a1a1a;
+            --dark-card: #2d2d2d;
+            --dark-text: #f0f0f0;
+            --dark-border: #444;
+        }
+        
+        .dark-mode {
+            --text: var(--dark-text);
+            --text-light: #b0b0b0;
+            --light-bg: var(--dark-bg);
+            --card-bg: var(--dark-card);
+            --border: var(--dark-border);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SolaimanLipi', 'Segoe UI', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--card-bg);
+            box-shadow: 0 2px 8px var(--shadow);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 50px 0 30px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--text-light);
+        }
+        
+        .checker-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid var(--border);
+        }
+        
+        .tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .text-areas {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .text-box {
+            position: relative;
+        }
+        
+        .text-box h3 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+        }
+        
+        .text-box textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            resize: none;
+            font-family: 'SolaimanLipi', sans-serif;
+            font-size: 16px;
+            background: var(--card-bg);
+            color: var(--text);
+        }
+        
+        .text-box textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(43, 125, 247, 0.2);
+        }
+        
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-upload i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .file-upload p {
+            color: var(--text-light);
+        }
+        
+        .file-info {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(43, 125, 247, 0.1);
+            border-radius: 6px;
+            color: var(--primary);
+        }
+        
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: var(--light-bg);
+            border-top: 1px solid var(--border);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        
+        .results {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            padding: 25px;
+            margin-bottom: 40px;
+            display: none;
+            border: 1px solid var(--border);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .result-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .status-original {
+            background: rgba(82, 196, 26, 0.1);
+            border: 1px solid rgba(82, 196, 26, 0.3);
+            color: var(--success);
+        }
+        
+        .status-plagiarized {
+            background: rgba(255, 77, 79, 0.1);
+            border: 1px solid rgba(255, 77, 79, 0.3);
+            color: var(--danger);
+        }
+        
+        .score-card {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .progress-container {
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            background: var(--primary);
+            transition: width 0.5s ease-out;
+        }
+        
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .detail-card {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
+        .detail-card h4 {
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        
+        .detail-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .confidence {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        
+        .high {
+            background: rgba(82, 196, 26, 0.1);
+            color: var(--success);
+        }
+        
+        .medium {
+            background: rgba(250, 173, 20, 0.1);
+            color: var(--warning);
+        }
+        
+        .low {
+            background: rgba(255, 77, 79, 0.1);
+            color: var(--danger);
+        }
+        
+        .processed-text {
+            margin-top: 20px;
+        }
+        
+        .processed-text h4 {
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        
+        .processed-text-content {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(200%);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .notification.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .notification i {
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .details {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification System -->
+    <div id="notification" class="notification" style="display: none;">
+        <i id="notification-icon"></i>
+        <span id="notification-message"></span>
+    </div>
+
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <span class="logo-icon">✍️</span>
+                <span>Bangla Plagiarism Checker</span>
+            </div>
+            <div class="nav-right">
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="hero">
+            <h1>বাংলা সাদৃশ্য পরীক্ষক</h1>
+            <p>পেশাদার মানের বাংলা টেক্সট সাদৃশ্য পরীক্ষা সেবা। আপনার লেখার অনন্যতা যাচাই করুন আমাদের উন্নত AI প্রযুক্তি ব্যবহার করে।</p>
+        </section>
+        
+        <section class="checker-container">
+            <div class="tab-header">
+                <button class="tab-btn active" data-tab="text">টেক্সট ইনপুট</button>
+                <button class="tab-btn" data-tab="document">ডকুমেন্ট আপলোড</button>
+            </div>
+            
+            <div class="tab-content active" id="textTab">
+                <div class="text-areas">
+                    <div class="text-box">
+                        <h3><span>✍️</span> আপনার লেখা</h3>
+                        <textarea id="inputText" placeholder="এখানে আপনার বাংলা লেখাটি পেস্ট করুন..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="documentTab">
+                <div class="file-upload" id="fileUpload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>ডকুমেন্ট আপলোড করুন</h3>
+                    <p>PDF, DOCX, বা TXT ফাইল ড্র্যাগ এন্ড ড্রপ করুন অথবা ক্লিক করে সিলেক্ট করুন</p>
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt" style="display: none;">
+                </div>
+                <div class="file-info" id="fileInfo">
+                    <i class="fas fa-file-alt"></i>
+                    <span id="fileName"></span>
+                    <button id="removeFile" style="background: none; border: none; color: var(--danger); cursor: pointer; margin-left: 10px;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="action-bar">
+                <div>
+                    <button class="btn btn-outline" id="clearBtn">
+                        <span>🗑️</span> ক্লিয়ার করুন
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-primary" id="checkBtn">
+                        <span>🔍</span> সাদৃশ্য পরীক্ষা করুন
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>আপনার লেখা বিশ্লেষণ করা হচ্ছে...</p>
+        </div>
+        
+        <section class="results" id="resultsSection">
+            <div class="results-header">
+                <h2>পরীক্ষার ফলাফল</h2>
+                <span class="result-status status-original" id="resultStatus">অনন্য</span>
+            </div>
+            
+            <div class="score-card">
+                <h3>সামগ্রিক সাদৃশ্য স্কোর</h3>
+                <div class="score-value" id="overallScore">0%</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+                <p id="resultDescription">এই লেখাটি সম্পূর্ণ অনন্য বলে প্রমাণিত হয়েছে।</p>
+            </div>
+            
+            <div class="details">
+                <div class="detail-card">
+                    <h4>TF-IDF সাদৃশ্য</h4>
+                    <div class="detail-value" id="tfidfScore">0%</div>
+                </div>
+                <div class="detail-card">
+                    <h4>SBERT সেমান্টিক সাদৃশ্য</h4>
+                    <div class="detail-value" id="sbertScore">0%</div>
+                </div>
+            </div>
+            
+            <div class="processed-text">
+                <h4>প্রক্রিয়াকৃত টেক্সট</h4>
+                <div class="processed-text-content" id="processedText"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© <span id="currentYear"></span> Bangla Plagiarism Checker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const removeFile = document.getElementById('removeFile');
+        const checkBtn = document.getElementById('checkBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const inputText = document.getElementById('inputText');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsSection = document.getElementById('resultsSection');
+        const notification = document.getElementById('notification');
+        const notificationIcon = document.getElementById('notification-icon');
+        const notificationMessage = document.getElementById('notification-message');
+        
+        // Current year for footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            
+            const icon = themeToggle.querySelector('i');
+            if (isDark) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+            
+            showNotification(isDark ? 'ডার্ক মোড সক্রিয়' : 'লাইট মোড সক্রিয়', 'success');
+        });
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+            themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+        }
+        
+        // Tab switching
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(`${tabId}Tab`).classList.add('active');
+            });
+        });
+        
+        // File upload handling
+        fileUpload.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', handleFileUpload);
+        
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check file type
+            const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+            if (!validTypes.includes(file.type)) {
+                showNotification('শুধুমাত্র PDF, DOCX, বা TXT ফাইল গ্রহণযোগ্য', 'error');
+                return;
+            }
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showNotification('ফাইলের সাইজ 5MB এর বেশি হতে পারবে না', 'error');
+                return;
+            }
+            
+            // Display file info
+            fileName.textContent = file.name;
+            fileInfo.style.display = 'flex';
+            fileUpload.style.display = 'none';
+            
+            // Extract text from file (simplified - in real app you'd use a proper parser)
+            extractTextFromFile(file);
+        }
+        
+        function extractTextFromFile(file) {
+            showNotification('ফাইল প্রসেসিং করা হচ্ছে...', 'success');
+            
+            // Simulate file processing (in a real app, you'd use proper text extraction)
+            setTimeout(() => {
+                // This is just a simulation - real implementation would parse the file
+                const sampleText = "এটি একটি সিমুলেটেড টেক্সট। আসল অ্যাপ্লিকেশনে আমরা ডকুমেন্ট থেকে প্রকৃত টেক্সট এক্সট্র্যাক্ট করব।";
+                inputText.value = sampleText;
+                showNotification('ফাইল থেকে টেক্সট এক্সট্র্যাক্ট করা হয়েছে', 'success');
+            }, 2000);
+        }
+        
+        removeFile.addEventListener('click', () => {
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            fileUpload.style.display = 'flex';
+            inputText.value = '';
+        });
+        
+        // Clear button
+        clearBtn.addEventListener('click', () => {
+            inputText.value = '';
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            fileUpload.style.display = 'flex';
+            resultsSection.style.display = 'none';
+        });
+        
+        // Check plagiarism
+        checkBtn.addEventListener('click', checkPlagiarism);
+        
+        async function checkPlagiarism() {
+            const text = inputText.value.trim();
+            
+            if (!text) {
+                showNotification('দয়া করে আপনার লেখাটি ইনপুট করুন', 'error');
+                return;
+            }
+            
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            resultsSection.style.display = 'none';
+            
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        min_similarity: 0.65
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Unknown error occurred');
+                }
+                
+                if (data.status === "error") {
+                    throw new Error(data.message);
+                }
+                
+                // Update UI with results
+                updateResultsUI(data);
+                showNotification('সাদৃশ্য পরীক্ষা সম্পন্ন হয়েছে', 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification(`ত্রুটি: ${error.message}`, 'error');
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+        
+        function updateResultsUI(data) {
+            document.getElementById('overallScore').textContent = data.similarity_score;
+            document.getElementById('progressBar').style.width = data.similarity_score;
+            
+            document.getElementById('tfidfScore').textContent = data.tfidf_score;
+            document.getElementById('sbertScore').textContent = data.sbert_score;
+            document.getElementById('processedText').textContent = data.processed_text;
+            
+            // Update status
+            const resultStatus = document.getElementById('resultStatus');
+            if (data.status === "Plagiarized") {
+                resultStatus.textContent = "সাদৃশ্য পাওয়া গেছে";
+                resultStatus.className = "result-status status-plagiarized";
+                document.getElementById('resultDescription').textContent = 
+                    `এই লেখাটি ${data.similarity_score} সাদৃশ্য প্রদর্শন করছে (থ্রেশহোল্ড: ${data.threshold_used})`;
+            } else {
+                resultStatus.textContent = "অনন্য লেখা";
+                resultStatus.className = "result-status status-original";
+                document.getElementById('resultDescription').textContent = 
+                    "এই লেখাটি সম্পূর্ণ অনন্য বলে প্রমাণিত হয়েছে।";
+            }
+            
+            // Add confidence indicator
+            const confidenceSpan = document.createElement('span');
+            confidenceSpan.className = `confidence ${data.confidence.toLowerCase()}`;
+            confidenceSpan.textContent = data.confidence;
+            
+            // Remove existing confidence span if any
+            const existingConfidence = document.querySelector('#overallScore > span.confidence');
+            if (existingConfidence) {
+                existingConfidence.remove();
+            }
+            
+            document.getElementById('overallScore').appendChild(confidenceSpan);
+            
+            // Show results
+            resultsSection.style.display = 'block';
+        }
+        
+        // Notification system
+        function showNotification(message, type) {
+            notification.className = `notification ${type}`;
+            notificationMessage.textContent = message;
+            
+            if (type === 'error') {
+                notificationIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                notificationIcon.className = 'fas fa-check-circle';
+            }
+            
+            notification.style.display = 'flex';
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 5000);
+        }
+        
+        // Drag and drop for file upload
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.style.borderColor = 'var(--primary)';
+            fileUpload.style.backgroundColor = 'rgba(43, 125, 247, 0.1)';
+        });
+        
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.style.borderColor = 'var(--border)';
+            fileUpload.style.backgroundColor = 'transparent';
+        });
+        
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.style.borderColor = 'var(--border)';
+            fileUpload.style.backgroundColor = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileUpload({ target: fileInput });
+            }
+        });
+    </script>
+</body>
+</html>
