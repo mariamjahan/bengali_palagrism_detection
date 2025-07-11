@@ -203,6 +203,15 @@ async def check_plagiarism(input: InputText):
         logger.error(f"Processing error: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal processing error")
 
+import socket
+import uvicorn
+
+def get_free_port():
+    s = socket.socket()
+    s.bind(('', 0))
+    return s.getsockname()[1]
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8500)
+    port = get_free_port()
+    print(f"Running on port {port}")
+    uvicorn.run(app, host="0.0.0.0", port=port)
